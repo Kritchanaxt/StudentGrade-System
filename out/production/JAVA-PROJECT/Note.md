@@ -5,4 +5,4 @@
 - View = หน้าตาแสดงผล
 - Controller = ตัวกลางที่เชื่อมระหว่าง View และ Model
 
-#### by KhonE3
+#### by Bak Got KhonE3 
