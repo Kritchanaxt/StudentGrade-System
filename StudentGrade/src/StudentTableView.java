@@ -29,7 +29,7 @@ public class StudentTableView extends JFrame {
         };
 
         // ปรับขนาดฟอนต์ในหัวตาราง (JTableHeader)
-        Font headerFont = new Font("Arial", Font.BOLD, 32);  
+        Font headerFont = new Font("Arial", Font.BOLD, 32);
         table.getTableHeader().setFont(headerFont);
 
         // ปรับขนาดของคอลัมน์ให้เหมาะสมกับข้อมูลในตาราง
