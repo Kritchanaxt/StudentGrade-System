@@ -52,19 +52,11 @@ public class StudentGradeView extends JFrame {
         buttonPanel.setBackground(BACKGROUND_COLOR);
 
         JButton btnAddStudent = new RoundedButton("Add Student");
-        JButton btnUpdateStudent = new RoundedButton("Update Student");
-        JButton btnDeleteStudent = new RoundedButton("Delete Student");
         JButton btnViewGrades = new RoundedButton("View Grades");
         JButton btnBack = new RoundedButton("Back");
 
         // ActionListener สำหรับปุ่ม Add Student
         btnAddStudent.addActionListener(e -> handleAddStudent(txtStudentID, txtStudentName, txtHomeworkScore, txtTestScore));
-
-        // ActionListener สำหรับปุ่ม Update Student
-        btnUpdateStudent.addActionListener(e -> handleUpdateStudent(txtStudentID, txtStudentName, txtHomeworkScore, txtTestScore));
-
-        // ActionListener สำหรับปุ่ม Delete Student
-        btnDeleteStudent.addActionListener(e -> handleDeleteStudent(txtStudentID));
 
         // ActionListener สำหรับปุ่ม View Grades
         btnViewGrades.addActionListener(e -> new StudentTableView(students));
@@ -76,8 +68,6 @@ public class StudentGradeView extends JFrame {
         });
 
         buttonPanel.add(btnAddStudent);
-        buttonPanel.add(btnUpdateStudent);
-        buttonPanel.add(btnDeleteStudent);
         buttonPanel.add(btnViewGrades);
         buttonPanel.add(btnBack);
 
