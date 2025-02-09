@@ -4,6 +4,9 @@ import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 
 public class Main {
+    // **ArrayList สำหรับเก็บข้อมูลนักเรียนแบบ static (เหมือนเดิม)**
+    private static ArrayList<Student> studentList = getStudentList();
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame mainFrame = new JFrame("Student Grading System");
@@ -17,25 +20,26 @@ public class Main {
             gbc.insets = new Insets(10, 10, 10, 10);
 
             // สร้างปุ่มที่มีสไตล์
-            JButton btnGradeCalc = new RoundedButton("Grade Calculator");
-            JButton btnStudentSystem = new RoundedButton("Student Grade System");
-            JButton btnStudentTable = new RoundedButton("View Student Table");
+            JButton btnGradeCalc = new RoundedButton("Student Calculate Grade"); // เปลี่ยนชื่อปุ่ม
+            JButton btnStudentManage = new RoundedButton("Student Management"); // เปลี่ยนชื่อปุ่ม
+            JButton btnStudentView = new RoundedButton("Student View"); // เปลี่ยนชื่อปุ่ม
 
             // Action Listener สำหรับแต่ละปุ่ม
             btnGradeCalc.addActionListener(e -> {
-                mainFrame.dispose(); // ปิดหน้าหลัก
-                new GradeCalculatorView(); // เปิดหน้าคำนวณเกรด
+                mainFrame.dispose();
+                new GradeCalculatorView();
             });
 
-            btnStudentSystem.addActionListener(e -> {
-                mainFrame.dispose(); // ปิดหน้าหลัก
-                new StudentGradeView(); // เปิดระบบจัดการนักเรียน
+            btnStudentManage.addActionListener(e -> {
+                mainFrame.dispose();
+                // **เปิด StudentManagementView (หน้าจอ Form) สำหรับ Student Management**
+                new StudentManagementView(studentList); // เปิด StudentManagementView ที่เป็นหน้าจอ Form
             });
 
-            btnStudentTable.addActionListener(e -> {
-                mainFrame.dispose(); // ปิดหน้าหลัก
-                ArrayList<Student> students = getStudentList();
-                new StudentTableView(students); // เปิดหน้าตารางนักเรียน
+            btnStudentView.addActionListener(e -> {
+                mainFrame.dispose();
+                // **เปิด StudentTableView (หน้าจอ Table) สำหรับ View Student**
+                new StudentTableView(studentList); // เปิด StudentTableView ที่เป็นหน้าจอ Table
             });
 
             // เพิ่มปุ่มลงใน Layout
@@ -44,27 +48,36 @@ public class Main {
             mainFrame.add(btnGradeCalc, gbc);
 
             gbc.gridy = 1;
-            mainFrame.add(btnStudentSystem, gbc);
+            mainFrame.add(btnStudentManage, gbc); // เปลี่ยนปุ่ม Student System เป็น Student Management
 
             gbc.gridy = 2;
-            mainFrame.add(btnStudentTable, gbc);
+            mainFrame.add(btnStudentView, gbc); // เพิ่มปุ่ม Student View
 
             mainFrame.setMinimumSize(new Dimension(600, 400));
             mainFrame.setVisible(true);
         });
     }
 
-    // สร้างคลาสปุ่มแบบโค้งมน
+    // ฟังก์ชันสำหรับดึงข้อมูลนักเรียน (getStudentList) - **แก้ไขให้คืนค่า studentList ที่เป็น static** (เหมือนเดิม)
+    private static ArrayList<Student> getStudentList() {
+        if (studentList == null) {
+            studentList = new ArrayList<>();
+            studentList.add(new Student("S020", "Ryan Walker", 5.0, 95.0));
+        }
+        return studentList;
+    }
+
+    // คลาส RoundedButton (ปุ่มที่มีมุมโค้ง) (เหมือนเดิม)
     static class RoundedButton extends JButton {
-        private static final int RADIUS = 40; // ปรับความโค้งของขอบ
+        private static final int RADIUS = 40;
 
         public RoundedButton(String text) {
             super(text);
-            setContentAreaFilled(false); // ปิดการวาดพื้นหลังปุ่มเริ่มต้น
-            setFocusPainted(false); // เอาเส้นโฟกัสออก
-            setForeground(Color.WHITE); // สีตัวอักษรขาว
-            setFont(new Font("Arial", Font.BOLD, 48)); // ฟอนต์ตัวหนา
-            setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20)); // Padding (บน, ซ้าย, ล่าง, ขวา)
+            setContentAreaFilled(false);
+            setFocusPainted(false);
+            setForeground(Color.WHITE);
+            setFont(new Font("Arial", Font.BOLD, 48));
+            setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         }
 
         @Override
@@ -92,16 +105,5 @@ public class Main {
 
             g2.dispose();
         }
-    }
-
-    // ฟังก์ชันสำหรับดึงข้อมูลนักเรียน
-    private static ArrayList<Student> getStudentList() {
-        ArrayList<Student> students = new ArrayList<>();
-        students.add(new Student("S001", "John Doe", 85, 90));
-        students.add(new Student("S002", "Jane Smith", 88, 92));
-        students.add(new Student("S003", "Alice Brown", 75, 80));
-        students.add(new Student("S004", "Bob Johnson", 95, 98));
-        students.add(new Student("S005", "Charlie White", 70, 72));
-        return students;
     }
 }

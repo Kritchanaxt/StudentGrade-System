@@ -10,7 +10,8 @@ public class Student extends AbstractStudent implements GradeCalculatorInterface
 
     @Override
     public double calculateGrade() {
-        return (homeworkScore * 0.3) + (testScore * 0.7); // คำนวณเกรดจากคะแนนการบ้าน 30% และคะแนนการทดสอบ 70%
+        // **แก้ไข: คืนค่า Total Score เลย ไม่ต้องคำนวณสัดส่วน**
+        return calculateTotalScore();
     }
 
     @Override
@@ -18,7 +19,14 @@ public class Student extends AbstractStudent implements GradeCalculatorInterface
         return homeworkScore + testScore;
     }
 
-    // Getter methods
+    // Getter methods (เหมือนเดิม)
+    public String getStudentID() {
+        return super.getStudentID(); // เรียก Getter จาก AbstractStudent
+    }
+    public String getStudentName() {
+        return super.getStudentName(); // เรียก Getter จาก AbstractStudent
+    }
+
     public double getHomeworkScore() {
         return homeworkScore;
     }
@@ -27,12 +35,19 @@ public class Student extends AbstractStudent implements GradeCalculatorInterface
         return testScore;
     }
 
-    // Setter methods for updating values
+    // Setter methods for updating values (เหมือนเดิม)
     public void setHomeworkScore(double homeworkScore) {
         this.homeworkScore = homeworkScore;
     }
 
     public void setTestScore(double testScore) {
         this.testScore = testScore;
+    }
+
+    public void setStudentName(String studentName) {
+        super.setStudentName(studentName); // เรียก Setter จาก AbstractStudent
+    }
+    public void setStudentID(String studentID) {
+        super.setStudentID(studentID); // เรียก Setter จาก AbstractStudent
     }
 }

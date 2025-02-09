@@ -61,11 +61,6 @@ public class StudentGradeView extends JFrame {
         // ActionListener สำหรับปุ่ม View Grades
         btnViewGrades.addActionListener(e -> {
             this.dispose(); // ปิดหน้าหลัก
-            students.add(new Student("S001", "John Doe", 85, 90));
-            students.add(new Student("S002", "Jane Smith", 88, 92));
-            students.add(new Student("S003", "Alice Brown", 75, 80));
-            students.add(new Student("S004", "Bob Johnson", 95, 98));
-            students.add(new Student("S005", "Charlie White", 70, 72));
             new StudentTableView(students);
         });
 

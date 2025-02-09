@@ -1,5 +1,3 @@
-// Model
-
 public class StudentModel {
     private String studentID;
     private String studentName;
