@@ -59,7 +59,15 @@ public class StudentGradeView extends JFrame {
         btnAddStudent.addActionListener(e -> handleAddStudent(txtStudentID, txtStudentName, txtHomeworkScore, txtTestScore));
 
         // ActionListener สำหรับปุ่ม View Grades
-        btnViewGrades.addActionListener(e -> new StudentTableView(students));
+        btnViewGrades.addActionListener(e -> {
+            this.dispose(); // ปิดหน้าหลัก
+            students.add(new Student("S001", "John Doe", 85, 90));
+            students.add(new Student("S002", "Jane Smith", 88, 92));
+            students.add(new Student("S003", "Alice Brown", 75, 80));
+            students.add(new Student("S004", "Bob Johnson", 95, 98));
+            students.add(new Student("S005", "Charlie White", 70, 72));
+            new StudentTableView(students);
+        });
 
         // ActionListener สำหรับปุ่ม Back
         btnBack.addActionListener(e -> {
@@ -207,4 +215,5 @@ public class StudentGradeView extends JFrame {
             g2.dispose();
         }
     }
+
 }

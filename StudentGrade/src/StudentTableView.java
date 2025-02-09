@@ -156,6 +156,7 @@ public class StudentTableView extends JFrame {
         ArrayList<Student> students = new ArrayList<>();
         students.add(new Student("S001", "John Doe", 25.0, 65.0));
         students.add(new Student("S002", "Jane Smith", 20.0, 70.0));
+
         new StudentTableView(students);
     }
 

@@ -1,5 +1,5 @@
 
-# Note: Wavemla MaK Mak 
+# Note: 
 
 ## MVC (Model-View-Controller)
 - Model = ตัวแปรที่เก็บข้อมูล 
