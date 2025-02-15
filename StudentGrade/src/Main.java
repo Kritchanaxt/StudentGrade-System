@@ -9,7 +9,7 @@ public class Main {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            JFrame mainFrame = new JFrame("Student Grade System");
+            JFrame mainFrame = new JFrame("Student Grade System"); // Title เป็นภาษาอังกฤษ
             mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             mainFrame.setSize(1920, 1080);
             mainFrame.setLayout(new GridBagLayout());
@@ -20,9 +20,9 @@ public class Main {
             gbc.insets = new Insets(10, 10, 10, 10);
 
             // สร้างปุ่มที่มีสไตล์
-            JButton btnGradeCalc = new RoundedButton("Grade Calculate");
-            JButton btnStudentManage = new RoundedButton("Student Management");
-            JButton btnStudentView = new RoundedButton("Student Information Table");
+            JButton btnGradeCalc = new RoundedButton("Grade Calculate"); // Text ปุ่มเป็นภาษาอังกฤษ
+            JButton btnStudentManage = new RoundedButton("Student Management"); // Text ปุ่มเป็นภาษาอังกฤษ
+            JButton btnStudentView = new RoundedButton("Student Information Table"); // Text ปุ่มเป็นภาษาอังกฤษ
 
 
 
@@ -36,10 +36,10 @@ public class Main {
                 // สร้าง Dialog ขึ้นมาให้ผู้ใช้กรอกจำนวนนักเรียน
                 JPanel panel = new JPanel();
                 JTextField numStudentsField = new JTextField(5);
-                panel.add(new JLabel("จำนวนนักเรียน:"));
+                panel.add(new JLabel("Number of Students:")); // Label ใน Dialog เป็นภาษาอังกฤษ
                 panel.add(numStudentsField);
 
-                int result = JOptionPane.showConfirmDialog(null, panel, "กำหนดจำนวนนักเรียน",
+                int result = JOptionPane.showConfirmDialog(null, panel, "Set Number of Students", // Title ใน Dialog เป็นภาษาอังกฤษ
                         JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
                 if (result == JOptionPane.OK_OPTION) {
@@ -54,11 +54,11 @@ public class Main {
 //                            });
                             studentManagementView.setVisible(true);
                         } else {
-                            JOptionPane.showMessageDialog(null, "กรุณากรอกจำนวนนักเรียนที่มากกว่า 0", "ข้อผิดพลาด",
+                            JOptionPane.showMessageDialog(null, "Please enter a number of students greater than 0", "Error", // Message ใน Dialog เป็นภาษาอังกฤษ
                                     JOptionPane.ERROR_MESSAGE);
                         }
                     } catch (NumberFormatException ex) {
-                        JOptionPane.showMessageDialog(null, "กรุณากรอกจำนวนนักเรียนเป็นตัวเลข", "ข้อผิดพลาด",
+                        JOptionPane.showMessageDialog(null, "Please enter the number of students as a number", "Error", // Message ใน Dialog เป็นภาษาอังกฤษ
                                 JOptionPane.ERROR_MESSAGE);
                     }
                 }
