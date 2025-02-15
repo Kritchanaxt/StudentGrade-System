@@ -6,5 +6,3 @@
 
 
 
-
-<a href="https://github.com/Kritchanaxt/JAVA-PROJECT/blob/main/Student%20Grade%20System.mov" target="_blank" rel="noreferrer"></a> 
