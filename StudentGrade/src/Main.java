@@ -9,7 +9,7 @@ public class Main {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            JFrame mainFrame = new JFrame("Student Grading System");
+            JFrame mainFrame = new JFrame("Student Grade System");
             mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             mainFrame.setSize(1920, 1080);
             mainFrame.setLayout(new GridBagLayout());
@@ -20,9 +20,11 @@ public class Main {
             gbc.insets = new Insets(10, 10, 10, 10);
 
             // สร้างปุ่มที่มีสไตล์
-            JButton btnGradeCalc = new RoundedButton("Student Calculate Grade"); // เปลี่ยนชื่อปุ่ม
-            JButton btnStudentManage = new RoundedButton("Student Management"); // เปลี่ยนชื่อปุ่ม
-            JButton btnStudentView = new RoundedButton("Student View"); // เปลี่ยนชื่อปุ่ม
+            JButton btnGradeCalc = new RoundedButton("Grade Calculate");
+            JButton btnStudentManage = new RoundedButton("Student Management");
+            JButton btnStudentView = new RoundedButton("Student Information Table");
+
+
 
             // Action Listener สำหรับแต่ละปุ่ม
             btnGradeCalc.addActionListener(e -> {
@@ -31,15 +33,41 @@ public class Main {
             });
 
             btnStudentManage.addActionListener(e -> {
-                mainFrame.dispose();
-                // **เปิด StudentManagementView (หน้าจอ Form) สำหรับ Student Management**
-                new StudentManagementView(studentList); // เปิด StudentManagementView ที่เป็นหน้าจอ Form
+                // สร้าง Dialog ขึ้นมาให้ผู้ใช้กรอกจำนวนนักเรียน
+                JPanel panel = new JPanel();
+                JTextField numStudentsField = new JTextField(5);
+                panel.add(new JLabel("จำนวนนักเรียน:"));
+                panel.add(numStudentsField);
+
+                int result = JOptionPane.showConfirmDialog(null, panel, "กำหนดจำนวนนักเรียน",
+                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+                if (result == JOptionPane.OK_OPTION) {
+                    try {
+                        int numStudents = Integer.parseInt(numStudentsField.getText());
+                        if (numStudents > 0) {
+                            mainFrame.dispose();
+                            StudentManagementView studentManagementView = new StudentManagementView(studentList);
+                            studentManagementView.setupFormPanel(numStudents);
+//                            studentManagementView.getSubmitButton().addActionListener(submitEvent -> {
+//                                studentManagementView.submitStudentData();
+//                            });
+                            studentManagementView.setVisible(true);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "กรุณากรอกจำนวนนักเรียนที่มากกว่า 0", "ข้อผิดพลาด",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(null, "กรุณากรอกจำนวนนักเรียนเป็นตัวเลข", "ข้อผิดพลาด",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                }
             });
 
             btnStudentView.addActionListener(e -> {
                 mainFrame.dispose();
                 // **เปิด StudentTableView (หน้าจอ Table) สำหรับ View Student**
-                new StudentTableView(studentList); // เปิด StudentTableView ที่เป็นหน้าจอ Table
+                new StudentTableView(studentList);
             });
 
             // เพิ่มปุ่มลงใน Layout

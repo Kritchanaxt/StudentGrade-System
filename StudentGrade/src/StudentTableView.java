@@ -85,12 +85,29 @@ public class StudentTableView extends JFrame {
     private void populateTable() {
         tableModel.setRowCount(0); // ลบแถวเดิมออกก่อน
         for (Student student : students) {
+            double total = student.calculateTotalScore();
+            String grade = calculateLetterGrade(total); // คำนวณเกรดเป็นตัวอักษร
             tableModel.addRow(new Object[]{
                     student.getStudentID(),
                     student.getStudentName(),
                     student.calculateTotalScore(),
-                    student.calculateGrade()
+                    grade // แสดงผลเกรดตัวอักษรในตาราง
             });
+        }
+    }
+
+    // ฟังก์ชันคำนวณเกรดเป็นตัวอักษร
+    private String calculateLetterGrade(double calculatedGrade) {
+        if (calculatedGrade >= 80) {
+            return "A";
+        } else if (calculatedGrade >= 70) {
+            return "B";
+        } else if (calculatedGrade >= 60) {
+            return "C";
+        } else if (calculatedGrade >= 50) {
+            return "D";
+        } else {
+            return "F";
         }
     }
 

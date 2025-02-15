@@ -4,18 +4,16 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
 
+
 public class StudentManagementView extends JFrame {
     private final ArrayList<Student> students;
+    private int maxStudents;
     private final JTable table;
     private final DefaultTableModel tableModel;
 
-    // ฟอร์มสำหรับเพิ่ม/แก้ไขนักเรียน
-    private final JTextField txtStudentID = createTextField();
-    private final JTextField txtStudentName = createTextField();
-    private final JTextField txtHomeworkScore = createTextField();
-    private final JTextField txtTestScore = createTextField();
+    private final JPanel idInputPanel = new JPanel();
+    private final ArrayList<JTextField> studentIDFields = new ArrayList<>();
 
-    // กำหนดค่าพื้นฐานสำหรับสไตล์
     private static final Color PINK = new Color(255, 20, 147);
     private static final Color BACKGROUND_COLOR = new Color(255, 204, 225);
     private static final Font LABEL_FONT = new Font("Arial", Font.BOLD, 24);
@@ -30,78 +28,187 @@ public class StudentManagementView extends JFrame {
         setLayout(new BorderLayout(10, 10));
         getContentPane().setBackground(BACKGROUND_COLOR);
 
-        // ส่วนฟอร์ม (Form Panel)
-        JPanel formPanel = new JPanel(new GridLayout(7, 2, 7, 7));
+        JPanel formPanel = new JPanel();
         formPanel.setBorder(new EmptyBorder(50, 50, 50, 50));
         formPanel.setBackground(BACKGROUND_COLOR);
+        formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
 
-        formPanel.add(createLabel("Student ID:"));
-        formPanel.add(txtStudentID);
+        // **ตรวจสอบ: ครอบ idInputPanel ด้วย JScrollPane**
+        JScrollPane idScrollPane = new JScrollPane(idInputPanel);
+        idScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED); // ให้ ScrollBar แสดงเมื่อจำเป็น
+        idScrollPane.setBorder(new EmptyBorder(10, 10, 10, 10));
+        formPanel.add(idScrollPane);
 
-        formPanel.add(createLabel("Student Name:"));
-        formPanel.add(txtStudentName);
+        add(formPanel, BorderLayout.NORTH);
 
-        formPanel.add(createLabel("Homework Score (Max 30%):"));
-        formPanel.add(txtHomeworkScore);
-
-        formPanel.add(createLabel("Test Score (Max 70%):"));
-        formPanel.add(txtTestScore);
-
-        // ส่วนตาราง (Table Panel)
-        String[] columns = {"Student ID", "Student Name", "Total Score", "Grade"}; // **เอา "Calculated Grade" ออกแล้ว**
+        String[] columns = {"Student ID", "Student Name", "Total Score", "Grade"};
         tableModel = new DefaultTableModel(columns, 0);
         populateTable();
 
         table = new JTable(tableModel) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // ป้องกันไม่ให้แก้ไขข้อมูลในเซลล์
+                return false;
             }
         };
         configureTableStyle(table);
 
-        JScrollPane scrollPane = new JScrollPane(table); // ใส่ตารางใน ScrollPane
+        JScrollPane scrollPane = new JScrollPane(table);
 
-        // ส่วนปุ่ม (Button Panel)
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.setBackground(BACKGROUND_COLOR);
 
         JButton btnAddStudent = new RoundedButton("Add Student");
-        JButton btnUpdate = new RoundedButton("Update");
-        JButton btnDelete = new RoundedButton("Delete");
         JButton btnBack = new RoundedButton("Back");
 
-        // ActionListener สำหรับปุ่ม Add Student
-        btnAddStudent.addActionListener(e -> handleAddStudent());
+        btnAddStudent.addActionListener(e -> updateStudentTable());
 
-        // ActionListener สำหรับปุ่ม Update
-        btnUpdate.addActionListener(e -> updateStudent());
-
-        // ActionListener สำหรับปุ่ม Delete
-        btnDelete.addActionListener(e -> deleteStudent());
-
-        // ActionListener สำหรับปุ่ม Back
         btnBack.addActionListener(e -> {
             dispose();
             Main.main(null);
         });
 
         buttonPanel.add(btnAddStudent);
-        buttonPanel.add(btnUpdate);
-        buttonPanel.add(btnDelete);
         buttonPanel.add(btnBack);
 
-        // เพิ่ม Components ลงใน JFrame - จัด Layout ใหม่ให้มีทั้ง Form และ Table
-        JPanel centerPanel = new JPanel(new BorderLayout()); // Panel หลักตรงกลาง
+        JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setBackground(BACKGROUND_COLOR);
-        centerPanel.add(formPanel, BorderLayout.NORTH); // ฟอร์มอยู่ด้านบน
-        centerPanel.add(scrollPane, BorderLayout.CENTER); // ตารางอยู่ตรงกลาง
+        centerPanel.add(formPanel, BorderLayout.NORTH);
 
-        add(centerPanel, BorderLayout.CENTER); // เพิ่ม CenterPanel ลง JFrame
-        add(buttonPanel, BorderLayout.SOUTH); // ปุ่มอยู่ด้านล่าง
+        add(centerPanel, BorderLayout.CENTER);
+        add(buttonPanel, BorderLayout.SOUTH);
 
         setVisible(true);
     }
+
+    public void setupFormPanel(int numStudents) {
+        this.maxStudents = numStudents;
+        idInputPanel.removeAll();
+        idInputPanel.setLayout(new BoxLayout(idInputPanel, BoxLayout.Y_AXIS));
+        studentIDFields.clear();
+
+        for (int i = 0; i < numStudents; i++) {
+            JPanel studentFormPanel = new JPanel(new GridLayout(5, 2, 7, 7));
+            studentFormPanel.setBorder(BorderFactory.createTitledBorder("นักเรียน " + (i + 1)));
+
+            JTextField txtStudentID_dynamic = createTextField();
+            JTextField txtStudentName_dynamic = createTextField();
+            JTextField txtHomeworkScore_dynamic = createTextField();
+            JTextField txtTestScore_dynamic = createTextField();
+
+            studentFormPanel.add(createLabel("Student ID:"));
+            studentFormPanel.add(txtStudentID_dynamic);
+
+            studentFormPanel.add(createLabel("Student Name:"));
+            studentFormPanel.add(txtStudentName_dynamic);
+
+            studentFormPanel.add(createLabel("Homework Score (Max 30%):"));
+            studentFormPanel.add(txtHomeworkScore_dynamic);
+
+            studentFormPanel.add(createLabel("Test Score (Max 70%):"));
+            studentFormPanel.add(txtTestScore_dynamic);
+
+            idInputPanel.add(studentFormPanel);
+            studentIDFields.add(txtStudentID_dynamic);
+        }
+
+        idInputPanel.revalidate();
+        idInputPanel.repaint();
+    }
+
+
+    public boolean allFieldsFilled() {
+        if (studentIDFields.isEmpty()) return false;
+
+        for (JTextField field : studentIDFields) {
+            if (field.getText().trim().isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void updateSubmitButton() {
+    }
+
+
+    private void submitStudentIDs() {
+    }
+
+    public void submitStudentData() {
+        ArrayList<Student> newStudents = new ArrayList<>();
+
+        for (int i = 0; i < maxStudents; i++) {
+            JPanel studentFormPanel = (JPanel) idInputPanel.getComponent(i);
+
+            JTextField txtStudentID_dynamic = (JTextField) studentFormPanel.getComponent(1);
+            JTextField txtStudentName_dynamic = (JTextField) studentFormPanel.getComponent(3);
+            JTextField txtHomeworkScore_dynamic = (JTextField) studentFormPanel.getComponent(5);
+            JTextField txtTestScore_dynamic = (JTextField) studentFormPanel.getComponent(7);
+
+            String studentID = txtStudentID_dynamic.getText().trim();
+            String studentName = txtStudentName_dynamic.getText().trim();
+            double homeworkScore = 0;
+            double testScore = 0;
+
+            try {
+                homeworkScore = Double.parseDouble(txtHomeworkScore_dynamic.getText().trim());
+                testScore = Double.parseDouble(txtTestScore_dynamic.getText().trim());
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "กรุณากรอกข้อมูลให้ครบ!", "ข้อผิดพลาด", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (homeworkScore > 30 || testScore > 70) {
+                JOptionPane.showMessageDialog(this, "คะแนนเกินค่าสูงสุดที่กำหนด!", "ข้อผิดพลาด", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+
+            if (validateStudentID(studentID)) {
+                newStudents.add(new Student(studentID, studentName, homeworkScore, testScore));
+            } else {
+                return;
+            }
+        }
+
+
+        students.addAll(newStudents);
+        populateTable();
+        JOptionPane.showMessageDialog(this, "กรอกข้อมูลสำเร็จ", "สำเร็จ", JOptionPane.INFORMATION_MESSAGE);
+
+        clearIDInputFields();
+
+    }
+
+
+    private boolean validateStudentID(String studentID) {
+        for (Student existingStudent : students) {
+            if (existingStudent.getStudentID().equals(studentID)) {
+                JOptionPane.showMessageDialog(this, "ไอดีนักเรียนซ้ำกัน: " + studentID, "ข้อผิดพลาด", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    private void clearIDInputFields() {
+        for (int i = 0; i < maxStudents; i++) {
+            JPanel studentFormPanel = (JPanel) idInputPanel.getComponent(i);
+
+            JTextField txtStudentID_dynamic = (JTextField) studentFormPanel.getComponent(1);
+            JTextField txtStudentName_dynamic = (JTextField) studentFormPanel.getComponent(3);
+            JTextField txtHomeworkScore_dynamic = (JTextField) studentFormPanel.getComponent(5);
+            JTextField txtTestScore_dynamic = (JTextField) studentFormPanel.getComponent(7);
+
+            txtStudentID_dynamic.setText("");
+            txtStudentName_dynamic.setText("");
+            txtHomeworkScore_dynamic.setText("");
+            txtTestScore_dynamic.setText("");
+        }
+    }
+
 
     private JLabel createLabel(String text) {
         JLabel label = new JLabel(text);
@@ -125,7 +232,7 @@ public class StudentManagementView extends JFrame {
         table.getColumnModel().getColumn(0).setPreferredWidth(150);
         table.getColumnModel().getColumn(1).setPreferredWidth(300);
         table.getColumnModel().getColumn(2).setPreferredWidth(150);
-        table.getColumnModel().getColumn(3).setPreferredWidth(100); // ปรับขนาดคอลัมน์ Grade (เดิมคอลัมน์ที่ 5)
+        table.getColumnModel().getColumn(3).setPreferredWidth(100);
         table.setFont(new Font("Arial", Font.PLAIN, 24));
         table.setRowHeight(40);
         table.setBackground(new Color(255, 228, 225));
@@ -135,21 +242,20 @@ public class StudentManagementView extends JFrame {
     }
 
     private void populateTable() {
-        tableModel.setRowCount(0); // ลบแถวเดิมออกก่อน
+        tableModel.setRowCount(0);
         for (Student student : students) {
-            // double calculatedGrade = student.calculateGrade(); // ไม่ใช้ calculatedGrade แล้ว
             double total = student.calculateTotalScore();
-            String grade = calculateLetterGrade(total); // เรียกฟังก์ชันคำนวณเกรด
+            String grade = calculateLetterGrade(total);
             tableModel.addRow(new Object[]{
                     student.getStudentID(),
                     student.getStudentName(),
-                    student.calculateTotalScore(), // ใช้ TotalScore แทน
-                    grade // เพิ่มเกรดลงในแถวข้อมูล
+                    student.calculateTotalScore(),
+                    grade
             });
         }
     }
 
-    private String calculateLetterGrade(double calculatedGrade) { // ฟังก์ชันนี้ไม่ได้ใช้แล้ว แต่ยังคงเก็บไว้เผื่ออนาคต
+    private String calculateLetterGrade(double calculatedGrade) {
         if (calculatedGrade >= 80) {
             return "A";
         } else if (calculatedGrade >= 70) {
@@ -163,97 +269,18 @@ public class StudentManagementView extends JFrame {
         }
     }
 
-    private void handleAddStudent() {
-        try {
-            String studentID = txtStudentID.getText().trim();
-            String studentName = txtStudentName.getText().trim();
-            double homeworkScore = Double.parseDouble(txtHomeworkScore.getText().trim());
-            double testScore = Double.parseDouble(txtTestScore.getText().trim());
-
-            if (homeworkScore > 30 || testScore > 70) {
-                JOptionPane.showMessageDialog(this, "Scores exceed maximum values!", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            students.add(new Student(studentID, studentName, homeworkScore, testScore));
-            populateTable(); // รีเฟรชตาราง
-            JOptionPane.showMessageDialog(this, "Student added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            clearFields(); // เคลียร์ฟิลด์หลังจากเพิ่มข้อมูล
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Please enter valid numbers!", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+    private void updateStudentTable() {
+        submitStudentData();
     }
 
+
     private void updateStudent() {
-        int selectedRow = table.getSelectedRow();
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Please select a student to update.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        String studentID = (String) tableModel.getValueAt(selectedRow, 0);
-        Student student = students.stream()
-                .filter(s -> s.getStudentID().equals(studentID))
-                .findFirst()
-                .orElse(null);
-
-        if (student != null) {
-            txtStudentName.setText(student.getStudentName());
-            txtHomeworkScore.setText(String.valueOf(student.getHomeworkScore()));
-            txtTestScore.setText(String.valueOf(student.getTestScore()));
-            txtStudentID.setText(student.getStudentID());
-            txtStudentID.setEditable(false); // make student ID uneditable during update
-
-            Object[] message = {
-                    "Student ID:", txtStudentID,
-                    "Student Name:", txtStudentName,
-                    "Homework Score:", txtHomeworkScore,
-                    "Test Score:", txtTestScore
-            };
-
-            int option = JOptionPane.showConfirmDialog(this, message, "Update Student", JOptionPane.OK_CANCEL_OPTION);
-            if (option == JOptionPane.OK_OPTION) {
-                try {
-                    student.setStudentName(txtStudentName.getText().trim());
-                    student.setHomeworkScore(Double.parseDouble(txtHomeworkScore.getText().trim()));
-                    student.setTestScore(Double.parseDouble(txtTestScore.getText().trim()));
-                    populateTable(); // รีเฟรชตาราง
-                    JOptionPane.showMessageDialog(this, "Student updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    clearFields(); // เคลียร์ฟิลด์หลังอัปเดต
-                    txtStudentID.setEditable(true); // re-enable editing student ID for next add/update
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(this, "Please enter valid numbers!", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            } else {
-                clearFields(); // เคลียร์ฟิลด์หากยกเลิกการอัปเดต
-                txtStudentID.setEditable(true); // re-enable editing student ID if update cancelled
-            }
-        }
+        JOptionPane.showMessageDialog(this, "ฟังก์ชัน Update นักเรียน (ถูกเอาออกแล้ว)", "แจ้งเตือน", JOptionPane.INFORMATION_MESSAGE);
     }
 
 
     private void deleteStudent() {
-        int selectedRow = table.getSelectedRow();
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Please select a student to delete.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        int option = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this student?", "Delete Student", JOptionPane.YES_NO_OPTION);
-        if (option == JOptionPane.YES_OPTION) {
-            String studentID = (String) tableModel.getValueAt(selectedRow, 0);
-            students.removeIf(student -> student.getStudentID().equals(studentID));
-            populateTable(); // รีเฟรชตาราง
-            JOptionPane.showMessageDialog(this, "Student deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-
-    private void clearFields() {
-        txtStudentID.setText("");
-        txtStudentName.setText("");
-        txtHomeworkScore.setText("");
-        txtTestScore.setText("");
-        txtStudentID.setEditable(true); // ensure Student ID is editable when form is cleared
+        JOptionPane.showMessageDialog(this, "ฟังก์ชัน Delete นักเรียน (ถูกเอาออกแล้ว)", "แจ้งเตือน", JOptionPane.INFORMATION_MESSAGE);
     }
 
 

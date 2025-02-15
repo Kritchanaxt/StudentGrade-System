@@ -50,4 +50,6 @@ public class Student extends AbstractStudent implements GradeCalculatorInterface
     public void setStudentID(String studentID) {
         super.setStudentID(studentID); // เรียก Setter จาก AbstractStudent
     }
+
+
 }
