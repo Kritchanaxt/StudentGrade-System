@@ -1,8 +1,5 @@
 # JAVA-PROJECT
 
-<img width="1788" alt="G1" src="https://github.com/Kritchanaxt/JAVA-PROJECT/blob/main/G1.png" />
-<img width="1788" alt="G1" src="https://github.com/Kritchanaxt/JAVA-PROJECT/blob/main/G2.png" />
-<img width="1788" alt="G1" src="https://github.com/Kritchanaxt/JAVA-PROJECT/blob/main/G3.png" />
-<img width="1788" alt="G1" src="https://github.com/Kritchanaxt/JAVA-PROJECT/blob/main/G4.png" />
+#### **🔗 Links**
 
-
+  -  🎥  [**Demo Video**](https://drive.google.com/file/d/18XgoWvuE35FmMOMGD85K81gxnIn8kxyM/view?usp=sharing)
