@@ -1,4 +1,4 @@
-# JAVA-PROJECT
+# JAVA-PROJECT Student Grade System
 
 #### **🔗 Links**
 
