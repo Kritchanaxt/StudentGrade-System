@@ -65,6 +65,7 @@ public class Main {
             });
 
             btnStudentView.addActionListener(e -> {
+                System.out.println("Student List ก่อนเปิด StudentTableView: " + studentList);
                 mainFrame.dispose();
                 // **เปิด StudentTableView (หน้าจอ Table) สำหรับ View Student**
                 new StudentTableView(studentList);
@@ -90,7 +91,7 @@ public class Main {
     private static ArrayList<Student> getStudentList() {
         if (studentList == null) {
             studentList = new ArrayList<>();
-            studentList.add(new Student("S020", "Ryan Walker", 5.0, 95.0));
+
         }
         return studentList;
     }
