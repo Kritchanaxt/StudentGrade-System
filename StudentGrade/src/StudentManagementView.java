@@ -142,12 +142,7 @@ public class StudentManagementView extends JFrame {
         return true;
     }
 
-    public void updateSubmitButton() {
-    }
 
-
-    private void submitStudentIDs() {
-    }
 
     // **[ส่วนที่แก้ไข] ฟังก์ชัน submitStudentData ปรับปรุงการวนลูป + จำกัดจำนวนกรอก + แจ้งเตือน + แก้ Index**
     public void submitStudentData() {
@@ -308,14 +303,6 @@ public class StudentManagementView extends JFrame {
     }
 
 
-    private void updateStudent() {
-        JOptionPane.showMessageDialog(this, "Update Student function (removed)", "Information", JOptionPane.INFORMATION_MESSAGE); // Message Dialog เป็นภาษาอังกฤษ
-    }
-
-
-    private void deleteStudent() {
-        JOptionPane.showMessageDialog(this, "Delete Student function (removed)", "Information", JOptionPane.INFORMATION_MESSAGE); // Message Dialog เป็นภาษาอังกฤษ
-    }
 
 
     static class RoundedButton extends JButton {
