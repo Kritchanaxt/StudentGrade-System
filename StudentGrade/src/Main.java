@@ -35,7 +35,7 @@ public class Main {
             btnStudentManage.addActionListener(e -> {
                 // สร้าง Dialog ขึ้นมาให้ผู้ใช้กรอกจำนวนนักเรียน
                 JPanel panel = new JPanel();
-                JTextField numStudentsField = new JTextField(5);
+                JTextField numStudentsField = new JTextField(10);
                 panel.add(new JLabel("Number of Students:")); // Label ใน Dialog เป็นภาษาอังกฤษ
                 panel.add(numStudentsField);
 

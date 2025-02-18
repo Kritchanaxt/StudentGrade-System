@@ -19,7 +19,7 @@ public class StudentTableView extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // ✅✅✅ Initial ค่า averageLabel ที่นี่ (สร้าง JLabel Object) - สำคัญมาก! ✅✅✅
+        // Initial ค่า averageLabel ที่นี่ (สร้าง JLabel Object)
         averageLabel = new JLabel(); // Initial ค่า averageLabel ใน Constructor **ก่อนเรียก populateTable()**
 
         String[] columns = {"Student ID", "Student Name", "Total Score", "Calculated Grade"};

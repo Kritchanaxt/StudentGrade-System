@@ -22,8 +22,8 @@ public class StudentManagementView extends JFrame {
 
     private static final Color PINK = new Color(255, 20, 147);
     private static final Color BACKGROUND_COLOR = new Color(255, 204, 225);
-    private static final Font LABEL_FONT = new Font("Arial", Font.BOLD, 24);
-    private static final Font TEXT_FIELD_FONT = new Font("Arial", Font.PLAIN, 24);
+    private static final Font LABEL_FONT = new Font("Arial", Font.BOLD, 42);
+    private static final Font TEXT_FIELD_FONT = new Font("Arial", Font.PLAIN, 40);
 
     public StudentManagementView(ArrayList<Student> students) {
         this.students = students;

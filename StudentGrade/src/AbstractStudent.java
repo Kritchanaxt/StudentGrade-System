@@ -24,6 +24,6 @@ public abstract class AbstractStudent {
     }
 
     // Abstract methods that the subclass needs to implement
-    public abstract double calculateGrade();
+//    public abstract double calculateGrade();
     public abstract double calculateTotalScore();
 }
