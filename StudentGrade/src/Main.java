@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 
 public class Main {
@@ -49,9 +48,6 @@ public class Main {
                             mainFrame.dispose();
                             StudentManagementView studentManagementView = new StudentManagementView(studentList);
                             studentManagementView.setupFormPanel(numStudents);
-//                            studentManagementView.getSubmitButton().addActionListener(submitEvent -> {
-//                                studentManagementView.submitStudentData();
-//                            });
                             studentManagementView.setVisible(true);
                         } else {
                             JOptionPane.showMessageDialog(null, "Please enter a number of students greater than 0", "Error", // Message ใน Dialog เป็นภาษาอังกฤษ

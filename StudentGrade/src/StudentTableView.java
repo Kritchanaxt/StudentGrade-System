@@ -7,6 +7,8 @@ public class StudentTableView extends JFrame {
     private final JTable table;
     private final ArrayList<Student> students;
     private final DefaultTableModel tableModel;
+    private static final Color PINK = new Color(255, 20, 147);
+
 
     // **[ประกาศเป็น Instance Variable]**
     private JLabel averageLabel; // ประกาศ averageLabel เป็น Instance Variable ที่นี่
@@ -77,20 +79,26 @@ public class StudentTableView extends JFrame {
         updateAverageLabel(); // **[เรียก updateAverageLabel() ทุกครั้งหลัง populateTable()]**
     }
 
+
     private void updateAverageLabel() {
         double overallAverage = calculateOverallAverage();
         String formattedAverage = String.format("%.2f", overallAverage);
 
-        //  ปรับข้อความ Label เป็น "Total All Average" และจัดรูปแบบ
+        // ปรับข้อความ Label เป็น "Total All Average" และจัดรูปแบบ
         averageLabel.setText("Total All Average: " + formattedAverage);
+        averageLabel.setForeground(PINK);
+        averageLabel.setHorizontalAlignment(SwingConstants.LEFT); // จัดข้อความชิดซ้าย
 
-        //  ปรับการจัดวางข้อความชิดซ้าย
+        // ปรับการจัดวางข้อความชิดซ้าย
         averageLabel.setHorizontalAlignment(SwingConstants.LEFT); // จัดข้อความชิดซ้าย
 
         // ปรับขนาด Font ให้ใหญ่ขึ้น
         Font currentFont = averageLabel.getFont(); // ดึง Font ปัจจุบัน
         Font largerFont = currentFont.deriveFont(Font.BOLD, 36); // สร้าง Font ใหม่ให้ใหญ่ขึ้น (ขนาด 36, ตัวหนา)
         averageLabel.setFont(largerFont); // ตั้ง Font ใหม่ให้กับ averageLabel
+
+        add(averageLabel, BorderLayout.NORTH); // เพิ่ม averageLabel ในกรอบของ JFrame
+        setVisible(true);
     }
 
 
