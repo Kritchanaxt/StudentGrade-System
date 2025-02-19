@@ -10,7 +10,7 @@ public class Student extends AbstractStudent implements GradeCalculatorInterface
 
     @Override
     public double calculateGrade() {
-        // **แก้ไข: คืนค่า Total Score เลย ไม่ต้องคำนวณสัดส่วน**
+
         return calculateTotalScore();
     }
 

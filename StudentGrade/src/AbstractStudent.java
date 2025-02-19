@@ -23,7 +23,7 @@ public abstract class AbstractStudent {
         this.studentName = studentName;
     }
 
-    // Abstract methods that the subclass needs to implement
+
 //    public abstract double calculateGrade();
     public abstract double calculateTotalScore();
 }

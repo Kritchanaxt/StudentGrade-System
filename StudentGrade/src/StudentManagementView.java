@@ -59,8 +59,6 @@ public class StudentManagementView extends JFrame {
         };
         configureTableStyle(table);
 
-        JScrollPane scrollPane = new JScrollPane(table);
-
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.setBackground(BACKGROUND_COLOR);
 
@@ -130,25 +128,6 @@ public class StudentManagementView extends JFrame {
         idInputPanel.repaint();
     }
 
-
-    public boolean allFieldsFilled() {
-        if (studentIDFields.isEmpty()) return false;
-
-        for (JTextField field : studentIDFields) {
-            if (field.getText().trim().isEmpty()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public void updateSubmitButton() {
-    }
-
-
-    private void submitStudentIDs() {
-    }
-
     // **[ส่วนที่แก้ไข] ฟังก์ชัน submitStudentData ปรับปรุงการวนลูป + จำกัดจำนวนกรอก + แจ้งเตือน + แก้ Index**
     public void submitStudentData() {
         ArrayList<Student> newStudents = new ArrayList<>();
@@ -190,7 +169,7 @@ public class StudentManagementView extends JFrame {
 
             if (!allFieldsFilled) {
                 JOptionPane.showMessageDialog(this, "Please fill in all student information!", "Error", JOptionPane.ERROR_MESSAGE); // Message Dialog เป็นภาษาอังกฤษ
-                return;
+
             } else {
                 // **[ส่วนที่เพิ่มใหม่] เพิ่มข้อมูลนักเรียนสำเร็จ + อัปเดตตัวนับ + อัปเดต Label + เคลียร์ฟิลด์ + แจ้งเตือน**
                 students.addAll(newStudents);
@@ -308,14 +287,6 @@ public class StudentManagementView extends JFrame {
     }
 
 
-    private void updateStudent() {
-        JOptionPane.showMessageDialog(this, "Update Student function (removed)", "Information", JOptionPane.INFORMATION_MESSAGE); // Message Dialog เป็นภาษาอังกฤษ
-    }
-
-
-    private void deleteStudent() {
-        JOptionPane.showMessageDialog(this, "Delete Student function (removed)", "Information", JOptionPane.INFORMATION_MESSAGE); // Message Dialog เป็นภาษาอังกฤษ
-    }
 
 
     static class RoundedButton extends JButton {

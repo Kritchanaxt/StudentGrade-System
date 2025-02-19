@@ -65,7 +65,7 @@ public class GradeCalculatorView extends JFrame {
                 txtAverage.setText(String.format("%.2f", average));
 
                 // แสดงผลสถานะ (ผ่าน หรือ ไม่ผ่าน)
-                String status = average >= 60 ? "Passed" : "Failed";
+                String status = average >= 50 ? "Passed" : "Failed";
                 txtStatus.setText(status);
 
             } catch (NumberFormatException ex) {
