@@ -22,7 +22,7 @@ public class StudentTableView extends JFrame {
         setLayout(new BorderLayout());
 
         // Initial ค่า averageLabel ที่นี่ (สร้าง JLabel Object)
-        averageLabel = new JLabel(); // Initial ค่า averageLabel ใน Constructor **ก่อนเรียก populateTable()**
+        averageLabel = new JLabel();
 
         String[] columns = {"Student ID", "Student Name", "Total Score", "Calculated Grade"};
         tableModel = new DefaultTableModel(columns, 0);
@@ -89,15 +89,13 @@ public class StudentTableView extends JFrame {
         averageLabel.setForeground(PINK);
         averageLabel.setHorizontalAlignment(SwingConstants.LEFT); // จัดข้อความชิดซ้าย
 
-        // ปรับการจัดวางข้อความชิดซ้าย
-        averageLabel.setHorizontalAlignment(SwingConstants.LEFT); // จัดข้อความชิดซ้าย
 
         // ปรับขนาด Font ให้ใหญ่ขึ้น
         Font currentFont = averageLabel.getFont(); // ดึง Font ปัจจุบัน
         Font largerFont = currentFont.deriveFont(Font.BOLD, 36); // สร้าง Font ใหม่ให้ใหญ่ขึ้น (ขนาด 36, ตัวหนา)
         averageLabel.setFont(largerFont); // ตั้ง Font ใหม่ให้กับ averageLabel
 
-        add(averageLabel, BorderLayout.NORTH); // เพิ่ม averageLabel ในกรอบของ JFrame
+
         setVisible(true);
     }
 
