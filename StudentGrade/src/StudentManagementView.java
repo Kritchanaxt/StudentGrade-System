@@ -90,7 +90,7 @@ public class StudentManagementView extends JFrame {
         this.maxStudents = numStudents;
         idInputPanel.removeAll();
         idInputPanel.setLayout(new BoxLayout(idInputPanel, BoxLayout.Y_AXIS));
-        //studentIDFields.clear(); // Removed studentIDFields.clear()
+
 
         JPanel singleStudentPanel = new JPanel();
         singleStudentPanel.setLayout(new GridLayout(5, 2, 10, 7));
