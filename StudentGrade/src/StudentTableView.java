@@ -1,32 +1,34 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.ArrayList;
+//import java.util.ArrayList;
 
 public class StudentTableView extends JFrame {
     private final JTable table;
-    private final ArrayList<Student> students;
+
+    private Student[] students;
     private final DefaultTableModel tableModel;
     private static final Color PINK = new Color(255, 20, 147);
+    private int studentCount; // เพิ่มตัวแปร studentCount
 
 
-    // **[ประกาศเป็น Instance Variable]**
-    private JLabel averageLabel; // ประกาศ averageLabel เป็น Instance Variable ที่นี่
+    private JLabel averageLabel;
 
-    public StudentTableView(ArrayList<Student> students) {
+    // **แก้ไข Constructor รับ Student[] array และ studentCount**
+    public StudentTableView(Student[] students, int studentCount) {
         this.students = students;
+        this.studentCount = studentCount;
 
         setTitle("Student Grades");
         setSize(1920, 1080);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Initial ค่า averageLabel ที่นี่ (สร้าง JLabel Object)
         averageLabel = new JLabel();
 
         String[] columns = {"Student ID", "Student Name", "Total Score", "Calculated Grade"};
         tableModel = new DefaultTableModel(columns, 0);
-        populateTable(); // เรียก populateTable() ครั้งแรกเพื่อแสดงข้อมูลเริ่มต้น (เรียกหลัง Initial averageLabel)
+        populateTable();
 
         table = new JTable(tableModel) {
             @Override
@@ -53,7 +55,7 @@ public class StudentTableView extends JFrame {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.setBackground(new Color(255, 204, 225));
 
-        updateAverageLabel(); // เรียก updateAverageLabel() เริ่มต้นเพื่อแสดงค่าเฉลี่ยครั้งแรก (เรียกหลัง Initial averageLabel)
+        updateAverageLabel();
 
         buttonPanel.add(averageLabel);
         buttonPanel.add(btnUpdate);
@@ -66,17 +68,21 @@ public class StudentTableView extends JFrame {
 
     private void populateTable() {
         tableModel.setRowCount(0);
-        for (Student student : students) {
-            double total = student.calculateTotalScore();
-            String grade = calculateLetterGrade(total);
-            tableModel.addRow(new Object[]{
-                    student.getStudentID(),
-                    student.getStudentName(),
-                    student.calculateTotalScore(),
-                    grade
-            });
+
+        for (int i = 0; i < studentCount; i++) { // วนลูปเท่ากับ studentCount
+            Student student = students[i];
+            if (student != null) {
+                double total = student.calculateTotalScore();
+                String grade = calculateLetterGrade(total);
+                tableModel.addRow(new Object[]{
+                        student.getStudentID(),
+                        student.getStudentName(),
+                        student.calculateTotalScore(),
+                        grade
+                });
+            }
         }
-        updateAverageLabel(); // **[เรียก updateAverageLabel() ทุกครั้งหลัง populateTable()]**
+        updateAverageLabel();
     }
 
 
@@ -84,17 +90,13 @@ public class StudentTableView extends JFrame {
         double overallAverage = calculateOverallAverage();
         String formattedAverage = String.format("%.2f", overallAverage);
 
-        // ปรับข้อความ Label เป็น "Total All Average" และจัดรูปแบบ
         averageLabel.setText("Total All Average: " + formattedAverage);
         averageLabel.setForeground(PINK);
-        averageLabel.setHorizontalAlignment(SwingConstants.LEFT); // จัดข้อความชิดซ้าย
+        averageLabel.setHorizontalAlignment(SwingConstants.LEFT);
 
-
-        // ปรับขนาด Font ให้ใหญ่ขึ้น
-        Font currentFont = averageLabel.getFont(); // ดึง Font ปัจจุบัน
-        Font largerFont = currentFont.deriveFont(Font.BOLD, 36); // สร้าง Font ใหม่ให้ใหญ่ขึ้น (ขนาด 36, ตัวหนา)
-        averageLabel.setFont(largerFont); // ตั้ง Font ใหม่ให้กับ averageLabel
-
+        Font currentFont = averageLabel.getFont();
+        Font largerFont = currentFont.deriveFont(Font.BOLD, 36);
+        averageLabel.setFont(largerFont);
 
         setVisible(true);
     }
@@ -122,15 +124,21 @@ public class StudentTableView extends JFrame {
         }
 
         String studentID = (String) tableModel.getValueAt(selectedRow, 0);
-        Student student = students.stream()
-                .filter(s -> s.getStudentID().equals(studentID))
-                .findFirst()
-                .orElse(null);
+        Student studentToUpdate = null;
 
-        if (student != null) {
-            JTextField txtStudentName = new JTextField(student.getStudentName());
-            JTextField txtHomeworkScore = new JTextField(String.valueOf(student.getHomeworkScore()));
-            JTextField txtTestScore = new JTextField(String.valueOf(student.getTestScore()));
+        // **แก้ไข: วนลูปหา Student ใน Array students**
+        for (int i = 0; i < studentCount; i++) { // วนลูปเท่ากับ studentCount
+            if (students[i] != null && students[i].getStudentID().equals(studentID)) { // ตรวจสอบ null ก่อนเทียบ Student ID
+                studentToUpdate = students[i];
+                break; // เจอแล้วก็ออกจาก Loop
+            }
+        }
+
+
+        if (studentToUpdate != null) {
+            JTextField txtStudentName = new JTextField(studentToUpdate.getStudentName());
+            JTextField txtHomeworkScore = new JTextField(String.valueOf(studentToUpdate.getHomeworkScore()));
+            JTextField txtTestScore = new JTextField(String.valueOf(studentToUpdate.getTestScore()));
 
             Object[] message = {
                     "Student Name:", txtStudentName,
@@ -141,10 +149,10 @@ public class StudentTableView extends JFrame {
             int option = JOptionPane.showConfirmDialog(this, message, "Update Student", JOptionPane.OK_CANCEL_OPTION);
             if (option == JOptionPane.OK_OPTION) {
                 try {
-                    student.setStudentName(txtStudentName.getText().trim());
-                    student.setHomeworkScore(Double.parseDouble(txtHomeworkScore.getText().trim()));
-                    student.setTestScore(Double.parseDouble(txtTestScore.getText().trim()));
-                    populateTable(); // **[เรียก populateTable() หลัง Update]**
+                    studentToUpdate.setStudentName(txtStudentName.getText().trim());
+                    studentToUpdate.setHomeworkScore(Double.parseDouble(txtHomeworkScore.getText().trim()));
+                    studentToUpdate.setTestScore(Double.parseDouble(txtTestScore.getText().trim()));
+                    populateTable();
                     JOptionPane.showMessageDialog(this, "Student updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(this, "Please enter valid numbers!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -163,23 +171,46 @@ public class StudentTableView extends JFrame {
 
         int option = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this student?", "Delete Student", JOptionPane.YES_NO_OPTION);
         if (option == JOptionPane.YES_OPTION) {
-            String studentID = (String) tableModel.getValueAt(selectedRow, 0);
-            students.removeIf(student -> student.getStudentID().equals(studentID));
-            populateTable(); // **[เรียก populateTable() หลัง Delete]**
-            JOptionPane.showMessageDialog(this, "Student deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            String studentIDToDelete = (String) tableModel.getValueAt(selectedRow, 0);
+
+            // **แก้ไข: ลบ Student ใน Array โดย Shift ข้อมูล**
+            int indexToDelete = -1;
+            for (int i = 0; i < studentCount; i++) { // วนลูปเท่ากับ studentCount
+                if (students[i] != null && students[i].getStudentID().equals(studentIDToDelete)) { // ตรวจสอบ null ก่อนเทียบ Student ID
+                    indexToDelete = i;
+                    break;
+                }
+            }
+
+            if (indexToDelete != -1) {
+                // Shift ข้อมูลเพื่อลบช่องว่าง
+                for (int i = indexToDelete; i < studentCount - 1; i++) {
+                    students[i] = students[i + 1];
+                }
+                students[studentCount - 1] = null; // Set ตัวสุดท้ายเป็น null (optional, for clarity)
+                studentCount--; // ลด studentCount ลง
+                Main.setStudentCount(studentCount); // อัปเดต studentCount ใน Main
+
+                populateTable();
+                JOptionPane.showMessageDialog(this, "Student deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
         }
     }
 
 
     private double calculateOverallAverage() {
-        if (students.isEmpty()) {
+        if (studentCount == 0) { // ตรวจสอบ studentCount แทน students.isEmpty()
             return 0.0;
         }
         double totalScoreSum = 0;
-        for (Student student : students) {
-            totalScoreSum += student.calculateTotalScore();
+
+        for (int i = 0; i < studentCount; i++) { // วนลูปเท่ากับ studentCount
+            Student student = students[i];
+            if (student != null) { // ตรวจสอบ null ก่อนเรียก Method
+                totalScoreSum += student.calculateTotalScore();
+            }
         }
-        return totalScoreSum / students.size();
+        return totalScoreSum / studentCount; // หารด้วย studentCount แทน students.size()
     }
 
 

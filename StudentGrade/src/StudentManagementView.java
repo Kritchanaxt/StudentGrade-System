@@ -5,7 +5,8 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class StudentManagementView extends JFrame {
-    private final ArrayList<Student> students;
+
+    private Student[] students;
     private int maxStudents;
     private final JTable table;
     private final DefaultTableModel tableModel;
@@ -13,22 +14,22 @@ public class StudentManagementView extends JFrame {
     private final JPanel idInputPanel = new JPanel();
     private final ArrayList<JTextField> studentIDFields = new ArrayList<>();
 
-    // **[ส่วนที่แก้ไข] ประกาศ btnAddStudent เป็น Instance Variable**
-    private JButton btnAddStudent; // ประกาศตัวแปร btnAddStudent
+    private JButton btnAddStudent;
 
-    // **[ส่วนที่เพิ่มใหม่] ตัวแปรเคาน์เตอร์และ Label**
-    private int currentStudentCounter = 0; // ตัวแปรนับจำนวนนักเรียนที่กรอกไปแล้ว
-    private JLabel studentCounterLabel; // Label แสดงลำดับนักเรียน
+    private int currentStudentCounter = 0;
+    private JLabel studentCounterLabel;
 
     private static final Color PINK = new Color(255, 20, 147);
     private static final Color BACKGROUND_COLOR = new Color(255, 204, 225);
     private static final Font LABEL_FONT = new Font("Arial", Font.BOLD, 42);
     private static final Font TEXT_FIELD_FONT = new Font("Arial", Font.PLAIN, 40);
 
-    public StudentManagementView(ArrayList<Student> students) {
+    // **แก้ไข Constructor รับ Student[] array และ studentCount**
+    public StudentManagementView(Student[] students, int studentCount) {
         this.students = students;
+        this.currentStudentCounter = studentCount; // กำหนดค่า currentStudentCounter เริ่มต้น
 
-        setTitle("Student Management System"); // Title เป็นภาษาอังกฤษ
+        setTitle("Student Management System");
         setSize(1920, 1080);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
@@ -39,15 +40,14 @@ public class StudentManagementView extends JFrame {
         formPanel.setBackground(BACKGROUND_COLOR);
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
 
-        // **ตรวจสอบ: ครอบ idInputPanel ด้วย JScrollPane**
         JScrollPane idScrollPane = new JScrollPane(idInputPanel);
-        idScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED); // ให้ ScrollBar แสดงเมื่อจำเป็น
+        idScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         idScrollPane.setBorder(new EmptyBorder(10, 10, 10, 10));
         formPanel.add(idScrollPane);
 
         add(formPanel, BorderLayout.NORTH);
 
-        String[] columns = {"Student ID", "Student Name", "Total Score", "Grade"}; // Column Header เป็นภาษาอังกฤษ
+        String[] columns = {"Student ID", "Student Name", "Total Score", "Grade"};
         tableModel = new DefaultTableModel(columns, 0);
         populateTable();
 
@@ -62,9 +62,8 @@ public class StudentManagementView extends JFrame {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.setBackground(BACKGROUND_COLOR);
 
-        // **[ส่วนที่แก้ไข] Initial ค่า Instance Variable btnAddStudent**
-        btnAddStudent = new RoundedButton("Add Student"); // Initial ค่า btnAddStudent ที่เป็น Instance Variable
-        JButton btnBack = new RoundedButton("Back"); // Button Text เป็นภาษาอังกฤษ
+        btnAddStudent = new RoundedButton("Add Student");
+        JButton btnBack = new RoundedButton("Back");
 
         btnAddStudent.addActionListener(e -> updateStudentTable());
 
@@ -86,7 +85,7 @@ public class StudentManagementView extends JFrame {
         setVisible(true);
     }
 
-    // **[ส่วนที่แก้ไข] ฟังก์ชัน setupFormPanel ปรับปรุงเป็นฟอร์มกล่องเดียว + แสดงลำดับนักเรียน**
+
     public void setupFormPanel(int numStudents) {
         this.maxStudents = numStudents;
         idInputPanel.removeAll();
@@ -96,29 +95,27 @@ public class StudentManagementView extends JFrame {
         JPanel singleStudentPanel = new JPanel();
         singleStudentPanel.setLayout(new GridLayout(5, 2, 10, 7));
 
-        // **[ส่วนที่เพิ่มใหม่] รีเซ็ตตัวนับเมื่อเริ่ม setupFormPanel ใหม่**
-        currentStudentCounter = 0;
+        currentStudentCounter = Main.getStudentCount(); // ดึงค่า currentStudentCounter จาก Main (ค่าต่อเนื่อง)
 
-        // **[ส่วนที่เพิ่มใหม่] สร้าง Label แสดงลำดับนักเรียน**
-        studentCounterLabel = createLabel("Student " + (currentStudentCounter + 1)); // เริ่มต้นที่ Student 1
-        singleStudentPanel.add(studentCounterLabel); // เพิ่ม Label ลงใน Panel (ช่องแรก)
-        singleStudentPanel.add(new JLabel("")); // ช่องว่าง (เพื่อให้เยื้อง Label)
+        studentCounterLabel = createLabel("Student " + (currentStudentCounter + 1));
+        singleStudentPanel.add(studentCounterLabel);
+        singleStudentPanel.add(new JLabel(""));
 
         JTextField txtStudentID_dynamic = createTextField();
         JTextField txtStudentName_dynamic = createTextField();
         JTextField txtHomeworkScore_dynamic = createTextField();
         JTextField txtTestScore_dynamic = createTextField();
 
-        singleStudentPanel.add(createLabel("Student ID:")); // Label เป็นภาษาอังกฤษ
+        singleStudentPanel.add(createLabel("Student ID:"));
         singleStudentPanel.add(txtStudentID_dynamic);
 
-        singleStudentPanel.add(createLabel("Student Name:")); // Label เป็นภาษาอังกฤษ
+        singleStudentPanel.add(createLabel("Student Name:"));
         singleStudentPanel.add(txtStudentName_dynamic);
 
-        singleStudentPanel.add(createLabel("Homework Score (Max 30%):")); // Label เป็นภาษาอังกฤษ
+        singleStudentPanel.add(createLabel("Homework Score (Max 30%):"));
         singleStudentPanel.add(txtHomeworkScore_dynamic);
 
-        singleStudentPanel.add(createLabel("Test Score (Max 70%):")); // Label เป็นภาษาอังกฤษ
+        singleStudentPanel.add(createLabel("Test Score (Max 70%):"));
         singleStudentPanel.add(txtTestScore_dynamic);
 
         idInputPanel.add(singleStudentPanel);
@@ -128,19 +125,15 @@ public class StudentManagementView extends JFrame {
         idInputPanel.repaint();
     }
 
-    // **[ส่วนที่แก้ไข] ฟังก์ชัน submitStudentData ปรับปรุงการวนลูป + จำกัดจำนวนกรอก + แจ้งเตือน + แก้ Index**
-    public void submitStudentData() {
-        ArrayList<Student> newStudents = new ArrayList<>();
-        boolean allFieldsFilled = true;
 
-        // **[ส่วนที่เพิ่มใหม่] ตรวจสอบ: ถ้านับจำนวนนักเรียนที่กรอกแล้ว ยังไม่ถึง maxStudents**
-        if (currentStudentCounter < maxStudents) {
+    public void submitStudentData() {
+        // **แก้ไข: ตรวจสอบ currentStudentCounter < maxStudents และ < students.length**
+        if (currentStudentCounter < maxStudents && currentStudentCounter < students.length) {
             JPanel singleStudentPanel = (JPanel) idInputPanel.getComponent(0);
-            // **[ส่วนที่แก้ไข] ปรับ Index ให้ถูกต้องตามโครงสร้างใหม่ของ singleStudentPanel**
-            JTextField txtStudentID_dynamic = (JTextField) singleStudentPanel.getComponent(3); // Index แก้เป็น 3 (JTextField Student ID)
-            JTextField txtStudentName_dynamic = (JTextField) singleStudentPanel.getComponent(5); // Index แก้เป็น 5 (JTextField Student Name)
-            JTextField txtHomeworkScore_dynamic = (JTextField) singleStudentPanel.getComponent(7); // Index แก้เป็น 7 (JTextField Homework Score)
-            JTextField txtTestScore_dynamic = (JTextField) singleStudentPanel.getComponent(9); // Index แก้เป็น 9 (JTextField Test Score)
+            JTextField txtStudentID_dynamic = (JTextField) singleStudentPanel.getComponent(3);
+            JTextField txtStudentName_dynamic = (JTextField) singleStudentPanel.getComponent(5);
+            JTextField txtHomeworkScore_dynamic = (JTextField) singleStudentPanel.getComponent(7);
+            JTextField txtTestScore_dynamic = (JTextField) singleStudentPanel.getComponent(9);
 
             String studentID = txtStudentID_dynamic.getText().trim();
             String studentName = txtStudentName_dynamic.getText().trim();
@@ -151,70 +144,66 @@ public class StudentManagementView extends JFrame {
                 homeworkScore = Double.parseDouble(txtHomeworkScore_dynamic.getText().trim());
                 testScore = Double.parseDouble(txtTestScore_dynamic.getText().trim());
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Please fill in all information!", "Error", JOptionPane.ERROR_MESSAGE); // Message Dialog เป็นภาษาอังกฤษ
+                JOptionPane.showMessageDialog(this, "Please fill in all information!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             if (homeworkScore > 30 || testScore > 70) {
-                JOptionPane.showMessageDialog(this, "Scores exceed the maximum limit!", "Error", JOptionPane.ERROR_MESSAGE); // Message Dialog เป็นภาษาอังกฤษ
+                JOptionPane.showMessageDialog(this, "Scores exceed the maximum limit!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
 
             if (validateStudentID(studentID)) {
-                newStudents.add(new Student(studentID, studentName, homeworkScore, testScore));
+                // **แก้ไข: เพิ่ม Student ใหม่ลงใน Array students โดยใช้ Index currentStudentCounter**
+                students[currentStudentCounter] = new Student(studentID, studentName, homeworkScore, testScore);
             } else {
                 return;
             }
 
-            if (!allFieldsFilled) {
-                JOptionPane.showMessageDialog(this, "Please fill in all student information!", "Error", JOptionPane.ERROR_MESSAGE); // Message Dialog เป็นภาษาอังกฤษ
 
+            // **แก้ไข: อัปเดต studentCount ใน Main Class**
+            Main.setStudentCount(currentStudentCounter + 1); // อัปเดต studentCount ก่อนเพิ่มค่า
+            currentStudentCounter = Main.getStudentCount(); // ดึงค่า studentCount ที่อัปเดตแล้ว
+
+            populateTable();
+            JOptionPane.showMessageDialog(this, "Data entry for Student " + (currentStudentCounter) + " successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+
+            if (currentStudentCounter < maxStudents) {
+                studentCounterLabel.setText("Student " + (currentStudentCounter + 1));
+                clearIDInputFields();
             } else {
-                // **[ส่วนที่เพิ่มใหม่] เพิ่มข้อมูลนักเรียนสำเร็จ + อัปเดตตัวนับ + อัปเดต Label + เคลียร์ฟิลด์ + แจ้งเตือน**
-                students.addAll(newStudents);
-                populateTable();
-                JOptionPane.showMessageDialog(this, "Data entry for Student " + (currentStudentCounter + 1) + " successful!", "Success", JOptionPane.INFORMATION_MESSAGE); // Message Dialog เป็นภาษาอังกฤษ แสดงเลขนักเรียนที่เพิ่มสำเร็จ
-
-                // **[ส่วนที่เพิ่มใหม่] เพิ่มตัวนับ**
-                currentStudentCounter++;
-
-                // **[ส่วนที่เพิ่มใหม่] อัปเดต Label แสดงลำดับนักเรียน (ถ้ายังไม่ครบตามจำนวน)**
-                if (currentStudentCounter < maxStudents) {
-                    studentCounterLabel.setText("Student " + (currentStudentCounter + 1)); // อัปเดต Label เป็นเลขนักเรียนคนต่อไป
-                    clearIDInputFields(); // เคลียร์ฟิลด์เพื่อกรอกคนต่อไป
-                } else {
-                    // **[ส่วนที่เพิ่มใหม่] ถ้ากรอกครบตามจำนวนแล้ว**
-                    studentCounterLabel.setText("Completed!"); // เปลี่ยน Label เป็น "Completed!" หรือข้อความอื่น ๆ
-                    clearIDInputFields(); //เคลียร์ข้อมูลล่าสุด
-                    JOptionPane.showMessageDialog(this, "Data entry completed for all " + maxStudents + " students.", "Information", JOptionPane.INFORMATION_MESSAGE); // Message Dialog เป็นภาษาอังกฤษ แจ้งว่ากรอกครบแล้ว
-                    btnAddStudent.setEnabled(false); // ปิดปุ่ม "Add Student" เมื่อกรอกครบแล้ว (optional)
-                }
+                studentCounterLabel.setText("Completed!");
+                clearIDInputFields();
+                JOptionPane.showMessageDialog(this, "Data entry completed for all " + maxStudents + " students.", "Information", JOptionPane.INFORMATION_MESSAGE);
+                btnAddStudent.setEnabled(false);
             }
+
         } else {
-            // **[ส่วนที่เพิ่มใหม่] ถ้ากรอกข้อมูลเกินจำนวนที่กำหนด**
-            JOptionPane.showMessageDialog(this, "You have already entered data for " + maxStudents + " students.", "Information", JOptionPane.INFORMATION_MESSAGE); // Message Dialog เป็นภาษาอังกฤษ แจ้งว่ากรอกครบแล้ว
+            JOptionPane.showMessageDialog(this, "You have already entered data for " + maxStudents + " students.", "Information", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
 
     private boolean validateStudentID(String studentID) {
-        for (Student existingStudent : students) {
-            if (existingStudent.getStudentID().equals(studentID)) {
-                JOptionPane.showMessageDialog(this, "Duplicate Student ID: " + studentID, "Error", JOptionPane.ERROR_MESSAGE); // Message Dialog เป็นภาษาอังกฤษ
+        // **แก้ไข: วนลูปตรวจสอบ Student ID ใน Array students**
+        for (int i = 0; i < currentStudentCounter; i++) { // วนลูปเท่ากับ currentStudentCounter
+            if (students[i] != null && students[i].getStudentID().equals(studentID)) { // ตรวจสอบ null ก่อนเรียก Method
+                JOptionPane.showMessageDialog(this, "Duplicate Student ID: " + studentID, "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         }
         return true;
     }
 
-    // **[ส่วนที่แก้ไข] ฟังก์ชัน clearIDInputFields ปรับ Index ให้ถูกต้อง**
+
     private void clearIDInputFields() {
         JPanel singleStudentPanel = (JPanel) idInputPanel.getComponent(0);
-        JTextField txtStudentID_dynamic = (JTextField) singleStudentPanel.getComponent(3); // Index แก้เป็น 3 (JTextField Student ID)
-        JTextField txtStudentName_dynamic = (JTextField) singleStudentPanel.getComponent(5); // Index แก้เป็น 5 (JTextField Student Name)
-        JTextField txtHomeworkScore_dynamic = (JTextField) singleStudentPanel.getComponent(7); // Index แก้เป็น 7 (JTextField Homework Score)
-        JTextField txtTestScore_dynamic = (JTextField) singleStudentPanel.getComponent(9); // Index แก้เป็น 9 (JTextField Test Score)
+        JTextField txtStudentID_dynamic = (JTextField) singleStudentPanel.getComponent(3);
+        JTextField txtStudentName_dynamic = (JTextField) singleStudentPanel.getComponent(5);
+        JTextField txtHomeworkScore_dynamic = (JTextField) singleStudentPanel.getComponent(7);
+        JTextField txtTestScore_dynamic = (JTextField) singleStudentPanel.getComponent(9);
 
         txtStudentID_dynamic.setText("");
         txtStudentName_dynamic.setText("");
@@ -256,15 +245,19 @@ public class StudentManagementView extends JFrame {
 
     private void populateTable() {
         tableModel.setRowCount(0);
-        for (Student student : students) {
-            double total = student.calculateTotalScore();
-            String grade = calculateLetterGrade(total);
-            tableModel.addRow(new Object[]{
-                    student.getStudentID(),
-                    student.getStudentName(),
-                    student.calculateTotalScore(),
-                    grade
-            });
+        // **แก้ไข: วนลูป populateTable() โดยใช้ Array students และ studentCount**
+        for (int i = 0; i < Main.getStudentCount(); i++) { // วนลูปเท่ากับ studentCount ที่ได้จาก Main
+            Student student = students[i];
+            if (student != null) { // ตรวจสอบ null ก่อนเรียก Method
+                double total = student.calculateTotalScore();
+                String grade = calculateLetterGrade(total);
+                tableModel.addRow(new Object[]{
+                        student.getStudentID(),
+                        student.getStudentName(),
+                        student.calculateTotalScore(),
+                        grade
+                });
+            }
         }
     }
 
@@ -285,8 +278,6 @@ public class StudentManagementView extends JFrame {
     private void updateStudentTable() {
         submitStudentData();
     }
-
-
 
 
     static class RoundedButton extends JButton {
