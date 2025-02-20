@@ -1,6 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+//import java.util.ArrayList;
 
 public class Main {
     private static Student[] studentList = getStudentList();
