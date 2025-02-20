@@ -2,7 +2,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-//import java.util.ArrayList; // Removed ArrayList import
+//import java.util.ArrayList;
 
 public class StudentManagementView extends JFrame {
 
@@ -12,7 +12,7 @@ public class StudentManagementView extends JFrame {
     private final DefaultTableModel tableModel;
 
     private final JPanel idInputPanel = new JPanel();
-    //private final ArrayList<JTextField> studentIDFields = new ArrayList<>(); // Removed ArrayList studentIDFields
+
 
     private JButton btnAddStudent;
 
@@ -119,7 +119,7 @@ public class StudentManagementView extends JFrame {
         singleStudentPanel.add(txtTestScore_dynamic);
 
         idInputPanel.add(singleStudentPanel);
-        //studentIDFields.add(txtStudentID_dynamic); // Removed studentIDFields.add
+        //studentIDFields.add(txtStudentID_dynamic);
 
         idInputPanel.revalidate();
         idInputPanel.repaint();
